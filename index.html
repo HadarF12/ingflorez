@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ing. Civil – Haider Florez</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Hero / Banner -->
+  <header class="hero">
+    <div class="hero-overlay">
+      <h1>Haider Florez – Ingeniero Civil</h1>
+      <p>Soluciones estructurales y proyectos de infraestructura</p>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <nav>
+    <a href="#" class="tab-link active" data-tab="about">Sobre mí</a>
+    <a href="#" class="tab-link" data-tab="services">Servicios</a>
+    <a href="#" class="tab-link" data-tab="statistics">Estadísticas</a>
+    <a href="#" class="tab-link" data-tab="gallery">Proyectos</a>
+    <a href="#" class="tab-link" data-tab="contact">Contáctame</a>
+  </nav>
+
+  <!-- Sobre mí -->
+  <section id="about" class="active">
+    <h2>Sobre mí</h2>
+    <p>Soy un ingeniero civil con experiencia en diseño estructural, análisis vial y proyectos hidráulicos. Me enfoco en soluciones adaptadas a cada entorno, con especial atención a factores ambientales como la corrosión por salinidad.</p>
+  </section>
+
+  <!-- Servicios -->
+  <section id="services">
+    <h2>Servicios</h2>
+    <ul>
+      <li><img src="https://sc04.alicdn.com/kf/H15d869b807c447b2afeffc0b2d25fe00B/225336061/H15d869b807c447b2afeffc0b2d25fe00B.jpg" alt="Estructural"> Diseño estructural de edificaciones</li>
+      <li><img src="http://lmsstudy.usfeu.ru/pluginfile.php/5817/course/overviewfiles/Файл_000%20%281%29.jpg" alt="Tránsito"> Estudios de tránsito y movilidad</li>
+      <li><img src="https://topengineer.ru/images/articles/revit-group/revit-09.jpg" alt="Hidráulico"> Diseño de istalaciones MEP</li>
+      <li><img src="https://pvtest.ru/wp-content/uploads/a/f/e/afecc8fd405bc1a12fa4a7cb4ca1b2ef.png" alt="CAD"> Planos en AutoCAD y modelado 3D</li>
+    </ul>
+  </section>
+
+  <!-- Estadísticas -->
+  <section id="statistics">
+    <h2>Estudio de Salinidad por Zonas en Santa Marta</h2>
+    <p>Este análisis muestra el índice relativo de salinidad (0–100) medido en distintas zonas de la ciudad, lo cual ayuda a identificar dónde las estructuras son más propensas a afectaciones por corrosión.</p>
+
+    <div class="map-container">
+      <img src="http://www.scielo.org.co/img/revistas/pgeo/v29n2//0123-3769-pgeo-29-02-5-gf1.jpg" alt="Mapa de zonificación de salinidad en Santa Marta">
+    </div>
+
+    <div class="stats">
+      <div>
+        <h3>Media</h3>
+        <p id="mean">–</p>
+      </div>
+      <div>
+        <h3>Mediana</h3>
+        <p id="median">–</p>
+      </div>
+      <div>
+        <h3>Moda</h3>
+        <p id="mode">–</p>
+      </div>
+    </div>
+
+    <canvas id="dataChart"></canvas>
+  </section>
+
+  <!-- Galería de Proyectos -->
+  <section id="gallery">
+    <h2>Proyectos Destacados</h2>
+    <div class="gallery-grid">
+      <img src="Captura de pantalla 2025-04-30 221026.png" alt="Proyecto 1">
+      <img src="Filtro anaerobico.png" alt="Proyecto 2">
+      <img src="Bodega isometrica.png" alt="Proyecto 3">
+      <img src="Ejercicio geometria.png" alt="Proyecto 4">
+    </div>
+  </section>
+
+  <!-- Contacto -->
+  <section id="contact">
+    <h2>Contáctame</h2>
+    <form action="mailto:hdflorezramos@gmail.com" method="post" enctype="text/plain">
+      <input type="text" id="name" name="name" placeholder="Tu nombre" required />
+      <input type="email" id="email" name="email" placeholder="Tu correo" required />
+      <textarea id="message" name="message" rows="5" placeholder="Tu mensaje" required></textarea>
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Haider Florez – Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Chart.js y scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Estadísticas
+    function mean(arr) {
+      return (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2);
+    }
+    function median(arr) {
+      const s=[...arr].sort((a,b)=>a-b), m=Math.floor(s.length/2);
+      return s.length%2?s[m].toFixed(2):((s[m-1]+s[m])/2).toFixed(2);
+    }
+    function mode(arr) {
+      const f={}, max=f[0]=0;
+      arr.forEach(v=>f[v]=(f[v]||0)+1);
+      const mf=Math.max(...Object.values(f));
+      return Object.keys(f).filter(k=>f[k]===mf).join(', ');
+    }
+
+    const zonas = ["Centro Histórico","Gaira","Bello Horizonte","Pozos Colorados","El Rodadero","Mamatoco","Santa Marta Norte"];
+    const salinidad = [75,60,50,65,70,55,50];
+
+    document.getElementById('mean').textContent = mean(salinidad);
+    document.getElementById('median').textContent = median(salinidad);
+    document.getElementById('mode').textContent = mode(salinidad);
+
+    new Chart(
+      document.getElementById('dataChart').getContext('2d'),
+      {
+        type: 'bar',
+        data: { labels: zonas, datasets:[{ label:'Índice de Salinidad', data:salinidad }] },
+        options: { responsive:true, scales:{ y:{ beginAtZero:true, max:100 } } }
+      }
+    );
+
+    // Pestañas
+    document.querySelectorAll('.tab-link').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        document.querySelectorAll('.tab-link').forEach(l=>l.classList.remove('active'));
+        e.target.classList.add('active');
+        document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+        document.getElementById(e.target.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
